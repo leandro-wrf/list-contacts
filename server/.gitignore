@@ -1,0 +1,11 @@
+# NPM packages
+node_modules
+
+# YARN packgages
+yarn-*
+yarn.*
+
+# Project
+src/database/*.sqlite
+!uploads/.gitkeep
+uploads/
