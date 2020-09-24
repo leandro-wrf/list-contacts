@@ -97,6 +97,11 @@ Irei modificar este README durante a semana para ir atualizando o decorrer de co
   Porém não descarto a questão de que talvez possa ser melhor estruturado, para meu nível de conhecimento atual vejo uma ótima estrutura de código no backend, para o frontend, noto está faltando isto. Então irei revisar um pouco sobre este assunto e ir melhorando aos poucos.
 </p>
 
+### :pencil: Funcionalidades extras
+- [ ] Paginação
+- [ ] Botão que desmarca todos os contatos selecionados
+- [ ] Animação na paginação 
+
 ### :memo: Licença
 
 Licença MIT.
