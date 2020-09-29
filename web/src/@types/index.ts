@@ -16,22 +16,3 @@ export interface IBGEUFResponse {
 export interface IIBGECityResponse {
   nome: string;
 }
-
-export interface ICard {
-  data: Contact;
-  selected(): void;
-  deselect(): void;
-  setEditContactVisible(): void;
-}
-
-export interface IAddContact {
-  visible: boolean;
-  close(): void;
-}
-
-export interface IEditContact {
-  visible: boolean;
-  close(): void;
-  data: Contact;
-  loadingData: number;
-}

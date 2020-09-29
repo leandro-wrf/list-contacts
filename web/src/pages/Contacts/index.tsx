@@ -7,7 +7,7 @@ import Card from '../../components/Card';
 import AddContact from '../../components/AddContact';
 import EditContact from '../../components/EditContact';
 
-import IContact from '../../@types/IContact';
+import { Contact } from '../../@types';
 
 import './styles.css';
 
