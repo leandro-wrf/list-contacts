@@ -2,49 +2,49 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IoMdContact } from 'react-icons/io';
 
-import './styles.css';
+import {
+  Container,
+  Image,
+  Input,
+  NoContent
+} from './styles';
 
-interface IProps {
-  onFileUploaded: (file: File) => void;
-  imageUrl?: string;
-}
+import { IProps } from './types';
 
-const Dropzone: React.FC<IProps> = ({ onFileUploaded, imageUrl }) => {
-  const [selectedFileUrl, setSelectedFileUrl] = useState(
-    imageUrl === 'http://192.178.31.105:3333/uploads/noimage' 
-    ? '' 
-    : imageUrl
-  );
+const Dropzone: React.FC<IProps> = (props) => {
+  const urlLoaded= 
+    'http://192.168.31.105/uploads/noimage' === props.imageUrl ? '' : props.imageUrl
+  
+  const [selectedFileUrl, setSelectedFileUrl] = useState(urlLoaded);
 
   const onDrop = useCallback(acceptedFiles => {
     const file = acceptedFiles[0];
 
     const fileUrl = URL.createObjectURL(file);
-    console.log(fileUrl);
 
     setSelectedFileUrl(fileUrl);
-    onFileUploaded(file);
-  }, [onFileUploaded]);
+    props.onFileUploaded(file);
+  }, [props.onFileUploaded]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/jpeg, image/jpg, image/png'
+    accept: 'image/*'
   });
 
   return (
-    <div className="dropzone" {...getRootProps()}>
-      <input {...getInputProps()} accept="image/*" />
+    <Container {...getRootProps()}>
+      <Input {...getInputProps()} accept="image/*" />
 
       {
         selectedFileUrl 
-        ? <img src={selectedFileUrl} alt="Contact thumbnail" />
+        ? <Image src={selectedFileUrl} alt="Contact thumbnail" />
         : (
-          <p>
+          <NoContent>
             <IoMdContact />
-          </p>
+          </NoContent>
         )
       }
-    </div>
+    </Container>
   )
 }
 

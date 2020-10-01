@@ -1,4 +1,6 @@
-.dropzone {
+import styled from 'styled-components';
+
+export const Container = styled.div`
   height: 150px;
   width: 150px;
   background: #e1faec;
@@ -9,17 +11,19 @@
   align-items: center;
   margin-bottom: 32px;
   outline: 0;
-}
+`
 
-.dropzone img {
+export const Image = styled.img`
   width: 100%;
   height: 100%;
 
   border-radius: 50%;
   object-fit: cover;
-}
+`
 
-.dropzone p {
+export const Input = styled.input``
+
+export const NoContent = styled.p`
   width: calc(100% - 20px);
   height: calc(100% - 20px);
   border-radius: 50%;
@@ -32,11 +36,13 @@
   color: #333;
 
   cursor: pointer;
-}
+`
 
-.dropzone svg {
+
+// estudar um pouco sobre styled-components
+export const IconSvg = styled.div`
   color: #0585a0;  /*#4ecb79;*/  
   width: 68px;
   height: 68px;
   margin-bottom: 8px;
-}
+`
