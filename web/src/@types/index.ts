@@ -1,8 +1,8 @@
 export interface Contact {
   id: number;
   image: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   uf: string;
@@ -13,6 +13,6 @@ export interface IBGEUFResponse {
   sigla: string;
 }
 
-export interface IIBGECityResponse {
+export interface IBGECityResponse {
   nome: string;
 }
