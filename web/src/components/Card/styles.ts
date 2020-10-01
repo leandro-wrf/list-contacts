@@ -1,4 +1,6 @@
-.contact-card {
+import styled from 'styled-components';
+
+export const Container = styled.div`
   background-color: #fff;
 
   height: 130px;
@@ -12,10 +14,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
-}
+  justify-content: flex-start; 
+`
 
-.contact-card-avatar {
+export const AvatarSelect = styled.button`
   background-color: transparent;
 
   height: 100px;
@@ -27,22 +29,9 @@
   outline: none;
 
   margin-right: 32px;
-}
+`
 
-.contact-card-avatar svg {
-  color: #0585a0;
-  width: 100%;
-  height: 100%;
-}
-
-.contact-select svg {
-  color: #46ee89;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-}
-
-.contact-card-info {
+export const OpenInfo = styled.button`
   background-color: transparent;
 
   cursor: pointer;
@@ -51,22 +40,30 @@
 
   display: flex;
   flex-direction: column;
-}
+`
 
-.contact-card-info-fullname {
+export const Fullname = styled.span`
   margin-bottom: 16px;
 
   font-size: 18px;
   font-family: 'Ubuntu', sans-serif;
-}
+`
 
-.contact-card-info-phone {
+export const Phone = styled.span`
   font-size: 16px;
   font-family: 'Ubuntu', sans-serif;
-}
+`
 
-@media (min-width: 1024px) {
-  .contact-card {
-    width: 340px;
-  }
-}
+
+/// Aprender a mexer com styled-components
+export const SVGavatar = styled.div`
+  color: #0585a0;
+  width: 100%;
+  height: 100%;
+`
+export const SVGcontact = styled.div`
+  color: #46ee89;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+`

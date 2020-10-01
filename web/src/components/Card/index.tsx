@@ -5,56 +5,53 @@ import { IoMdContact } from 'react-icons/io';
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import handleImage from '../../utils/handleImage';
 
-import IProps from '../../@types/IPropsCard';
+import { Props } from './types';
 
-import './styles.css';
+import {
+  Container,
+  AvatarSelect,
+  OpenInfo,
+  Fullname,
+  Phone
+} from './styles';
 
-const ContactCard: React.FC<IProps> = ({ data, selected, deselect, setEditContactVisible }) => {
-  const [item, setItem] = useState(false);
+const ContactCard: React.FC<Props> = ({ data, ...props}) => {
+  const [selected, setSelected] = useState(false);
 
   function handleSelectContactRemove() {
-    if (!item) {
-      selected();
-      return setItem(true);
+    if (!selected) {
+      props.select();
+
+      return setSelected(true);
     }
-    deselect();
-    setItem(false)
+    
+    props.unselect();
+
+    return setSelected(false);
   }
 
   return (
-    <div className="contact-card">
-      <button 
-        className="contact-card-avatar"
-        onClick={handleSelectContactRemove}
-      >
+    <Container>
+      <AvatarSelect onClick={handleSelectContactRemove}>
         {
-          item
-          ? (
-            <div className="contact-select">
-              <FaCheckCircle />
-            </div>
-          )
+          selected
+          ? <FaCheckCircle color="#46ee89" width="100%" height="100%"/>
           : handleImage(data)
         }
-      </button>
-      <button 
-        className="contact-card-info"
-        onClick={setEditContactVisible}
-      >
-        <span
-          className="contact-card-info-fullname"
-        >
-          {`${data.first_name} ${data.last_name}`}
-        </span>
-        <span
-          className="contact-card-info-phone"
-        >
+      </AvatarSelect>
+
+      <OpenInfo onClick={props.modalVisible}>
+        <Fullname>
+          {`${data.firstName} ${data.lastName}`}
+        </Fullname>
+
+        <Phone>
           {
             formatPhoneNumber(data.phone)
           }
-        </span>
-      </button>
-    </div>
+        </Phone>
+      </OpenInfo>
+    </Container>
   )
 }
 

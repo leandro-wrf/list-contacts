@@ -1,8 +1,8 @@
 import { Contact } from '../../@types/';
 
-export interface ICard {
+export interface Props {
   data: Contact;
-  selected(): void;
-  deselect(): void;
-  setEditContactVisible(): void;
+  select(): void;
+  unselect(): void;
+  modalVisible(): void;
 }
