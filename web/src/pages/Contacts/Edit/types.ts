@@ -1,6 +1,6 @@
 import { Contact } from '../../../@types';
 
-export interface Props {
+export interface IProps {
   visible: boolean;
   close(): void;
   data: Contact;

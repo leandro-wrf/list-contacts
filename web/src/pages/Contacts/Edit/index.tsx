@@ -2,17 +2,20 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-import api from '../../service/api';
+import api from '../../../service/api';
+import getUfs from '../../../service/requests/getUfs';
+import getCities from '../../../service/requests/getCities';
 
-import DropZone from '../DropZone';
+import DropZone from '../../../components/DropZone';
 
-import IProps from '../../@types/IPropsEditContact';
+import { IProps } from './types';
+
 import {
-  IIBGEUFResponse,
-  IIBGECityResponse
-} from '../../@types/IIBGE';
-
-import './styles.css';
+  Container,
+  Form,
+  FormGroup,
+  InputEmail
+} from './styles';
 
 const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) => {
   const [stateFix, setStateFix] = useState(true);
@@ -44,12 +47,9 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
   }, [loadingData]);
 
   useEffect(() => {
-    axios.get<IIBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-      .then(response => {
-        const ufInitials = response.data.map(uf => uf.sigla);
-
-        setUfs(ufInitials);
-      });
+    getUfs().then(response => {
+      setUfs(response);
+    });
   }, []);
 
   useEffect(() => {
@@ -57,12 +57,9 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
       return;
     }
 
-    axios.get<IIBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
-      .then(response => {
-        const cityNames = response.data.map(city => city.nome);
-
-        setCities(cityNames);
-      });
+    getCities().then(response => {
+      setCities(response);
+    });
   }, [selectedUf]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -133,14 +130,14 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
       }}
       ariaHideApp={false}
     >
-      <div className="modal">
+      <Container>
         <DropZone 
           onFileUploaded={setSelectedFile}
           imageUrl={data.image}
         />
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="modal-form-group">
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
             <input 
               type="text" 
               placeholder="First name"
@@ -157,9 +154,9 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
               value={formData.last_name}
               onChange={handleInputChange}
             />
-          </div>
+          </FormGroup>
 
-          <input
+          <InputEmail
             className="modal-form-email"
             type="email"
             placeholder="Email..."
@@ -169,7 +166,7 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
             onChange={handleInputChange}
           />
 
-          <div className="modal-form-group">
+          <FormGroup>
             <select 
               name="uf"
               id="uf"
@@ -193,9 +190,9 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
                 <option key={city} value={city}>{city}</option>
               ))}
             </select>
-          </div>
+          </FormGroup>
 
-          <div className="modal-form-group">
+          <FormGroup>
             <input 
               type="tel" 
               placeholder="Phone: (11) 1 1111-1111"
@@ -212,12 +209,11 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
             >
               SAVE
             </button>
-          </div>
-        </form>
-      </div>
+          </FormGroup>
+        </Form>
+      </Container>
     </Modal>
   );
 }
 
 export default EditContact;
-
