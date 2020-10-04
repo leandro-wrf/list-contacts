@@ -4,23 +4,30 @@ import { FaIdBadge, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import api from '../../service/api';
 
 import Card from '../../components/Card';
-import AddContact from '../../components/AddContact';
-import EditContact from '../../components/EditContact';
+import Add from './Add';
+import Edit from './Edit';
 
 import { Contact } from '../../@types';
 
-import './styles.css';
+import {
+  Container,
+  Painel,
+  Top,
+  ButtonAdd,
+  ButtonDelete,
+  ListContacts,
+  Grid
+} from './styles';
 
 const Contacts = () => {
-  const [contacts, setContacts] = useState<IContact[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [loadingContacts, setLoadingContacs] = useState(0);
   const [contactsSelected, setContactsSelected] = useState<number[]>([]);
-  const [eachCardSelected, seteachCardSelected] = useState(false);
-  const [contactEdit, setContactEdit] = useState<IContact>({
+  const [contactEdit, setContactEdit] = useState<Contact>({
     id: 0,
     image: '',
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     uf: '',
@@ -34,15 +41,24 @@ const Contacts = () => {
 
   useEffect(() => {
     api.get('/contacts').then(response => {
-      setContacts(response.data);
+      const serializedResponse =
+        response.data.map((contact: any) => {
+          return {
+            firstName: contact.first_name,
+            lastName: contact.last_name,
+            ...contact
+          }
+        });
+
+      setContacts(serializedResponse);
     });
-  }, [loadingContacts]);
+  }, []);
 
   function cardSelectToRemove(id: number) {
     setContactsSelected([...contactsSelected, id]);
   }
 
-  function cardDeselect(id: number) {
+  function cardUnselect(id: number) {
     const index = contactsSelected.indexOf(id);
     if( index > -1) {
       const copyArray = contactsSelected;
@@ -59,7 +75,7 @@ const Contacts = () => {
     setLoadingContacs(loadingContacts + 1);
   }
 
-  function handleOpenEditContact(contact: IContact) {
+  function handleOpenEditContact(contact: Contact) {
     setContactEdit(contact);
     setEditContactVisible(true);
     setLoadingData(loadingData + 1);
@@ -76,24 +92,17 @@ const Contacts = () => {
   }
 
   return (
-    <div className="content-page">
-      <div className="painel">
-        <div className="painel-top">
+    <Container>
+      <Painel>
+        <Top>
           <FaIdBadge size={40} color="#0585a0"/>
 
-          <button
-            className="painel-button-top"
-            onClick={() => setAddContactVisible(true)}
-          >
-            <FaPlus 
-              size={40} 
-              color="#46ee89"
-            />
-          </button>
-        </div>
+          <ButtonAdd onClick={() => setAddContactVisible(true)}>
+            <FaPlus size={40} color="#46ee89"/>
+          </ButtonAdd>
+        </Top>
 
-        <button 
-          className="painel-button-bottom"
+        <ButtonDelete
           type="submit"
           disabled={
             contactsSelected.length === 0
@@ -108,37 +117,37 @@ const Contacts = () => {
               ? "#878787" : "#fa4e4e"
             }
           />
-        </button>
-      </div>
+        </ButtonDelete>
+      </Painel>
 
-      <main>
-        <div className="list-grid">
+      <ListContacts>
+        <Grid>
           {
             contacts.map(contact => (
               <Card
                 key={contact.id}
                 data={contact} 
-                selected={() => cardSelectToRemove(contact.id)}
-                deselect={() => cardDeselect(contact.id)}
-                setEditContactVisible={() => handleOpenEditContact(contact)}
+                select={() => cardSelectToRemove(contact.id)}
+                unselect={() => cardUnselect(contact.id)}
+                modalVisible={() => handleOpenEditContact(contact)}
               />
             ))
           }
-        </div>
-      </main>
+        </Grid>
+      </ListContacts>
 
-      <AddContact
+      <Add
         visible={addContactVisible}
         close={closeAddContact}
       />
 
-      <EditContact
+      <Edit
         visible={editContactVisible}
         close={closeEditContact}
         data={contactEdit}
         loadingData={loadingData}
       />
-    </div>
+    </Container>
   )
 }
 

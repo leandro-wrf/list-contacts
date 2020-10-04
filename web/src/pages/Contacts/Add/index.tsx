@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
 import Modal from 'react-modal';
 
 import api from '../../../service/api';
@@ -11,15 +10,12 @@ import DropZone from '../../../components/DropZone';
 import { IProps } from './types';
 
 import {
-  IBGEUFResponse,
-  IBGECityResponse
-} from '../../../@types/';
-
-import {
   Container,
   Form,
   FormGroup,
+  Input,
   InputEmail,
+  Select,
   Button
 } from './styles';
 
@@ -49,7 +45,7 @@ const AddContact: React.FC<IProps> = props => {
       return;
     }
 
-    getCities().then(response => {
+    getCities(selectedUf).then(response => {
       setCities(response);
     });
   }, [selectedUf]);
@@ -115,18 +111,18 @@ const AddContact: React.FC<IProps> = props => {
       ariaHideApp={false}
     >
       <Container>
-        <DropZone onFileUploaded={setSelectedFile} imageUrl="http://192.178.31.105:3333/uploads/noimage"/>
+        <DropZone onFileUploaded={setSelectedFile} imageUrl="http://localhost:3333/uploads/noimage"/>
 
         <Form onSubmit={handleSubmit}>
           <FormGroup>
-            <input 
+            <Input 
               type="text" 
               placeholder="First name..."
               id="firstName"
               name="firstName"
               onChange={handleInputChange}
             />
-            <input 
+            <Input 
               type="text"
               placeholder="Last name..."
               id="lastName"
@@ -145,7 +141,7 @@ const AddContact: React.FC<IProps> = props => {
           />
 
           <FormGroup>
-            <select 
+            <Select
               name="uf"
               id="uf"
               value={selectedUf}
@@ -155,9 +151,9 @@ const AddContact: React.FC<IProps> = props => {
               {ufs.map(uf => (
                 <option key={uf} value={uf}>{uf}</option>
               ))}
-            </select>
+            </Select>
 
-            <select
+            <Select
               name="city"
               id="city"
               value={selectedCity}
@@ -167,11 +163,11 @@ const AddContact: React.FC<IProps> = props => {
               {cities.map(city => (
                 <option key={city} value={city}>{city}</option>
               ))}
-            </select>
+            </Select>
           </FormGroup>
 
           <FormGroup>
-            <input 
+            <Input
               type="tel" 
               placeholder="Phone: (xx) x xxxx-xxxx"
               id="phone"

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
-import { IoMdContact } from 'react-icons/io';
 
 import formatPhoneNumber from '../../utils/formatPhoneNumber';
 import handleImage from '../../utils/handleImage';
@@ -35,7 +34,7 @@ const ContactCard: React.FC<Props> = ({ data, ...props}) => {
       <AvatarSelect onClick={handleSelectContactRemove}>
         {
           selected
-          ? <FaCheckCircle color="#46ee89" width="100%" height="100%"/>
+          ? <FaCheckCircle size={82} color="#46ee89"/>
           : handleImage(data)
         }
       </AvatarSelect>

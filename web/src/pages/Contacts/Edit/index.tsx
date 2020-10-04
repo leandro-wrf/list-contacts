@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
 import Modal from 'react-modal';
 
 import api from '../../../service/api';
@@ -14,11 +13,15 @@ import {
   Container,
   Form,
   FormGroup,
-  InputEmail
+  Input,
+  InputEmail,
+  Select,
+  ButtonDisabled,
+  ButtonEnabled
 } from './styles';
 
 const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) => {
-  const [stateFix, setStateFix] = useState(true);
+  const [buttonActived, setButtonActived] = useState(true);
 
   const [ufs, setUfs] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
@@ -28,16 +31,16 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
   const [selectedFile, setSelectedFile] = useState<File>();
 
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: ''
   });
 
   useEffect(() => {
     setFormData({
-      first_name: data.first_name,
-      last_name: data.last_name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
       phone: data.phone
     })
@@ -57,7 +60,7 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
       return;
     }
 
-    getCities().then(response => {
+    getCities(selectedUf).then(response => {
       setCities(response);
     });
   }, [selectedUf]);
@@ -65,34 +68,30 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    console.log(formData.first_name);
-
     setFormData({...formData, [name]: value});
-    setStateFix(false);
+    setButtonActived(false);
   }
 
   function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
     setSelectedUf(event.target.value);
-    setStateFix(false);
+    setButtonActived(false);
   }
 
   function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
     setSelectedCity(event.target.value);
-    setStateFix(false);
+    setButtonActived(false);
   }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { first_name, last_name, email, phone } = formData;
+    const { firstName, lastName, email, phone } = formData;
     const uf = selectedUf;
     const city = selectedCity;
 
-    console.log(first_name, last_name, email, phone, uf, city);
-
     const content = new FormData();
-      content.append('first_name', first_name);
-      content.append('last_name', last_name);
+      content.append('first_name', firstName);
+      content.append('last_name', lastName);
       content.append('email', email);
       content.append('phone', phone);
       content.append('uf', uf);
@@ -101,9 +100,6 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
       if(selectedFile) {
         content.append('image', selectedFile);
       }
-
-      console.log(content);
-      console.log(selectedFile);
 
     await api.put(`/contact/${data.id}`, content);
 
@@ -138,20 +134,20 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
 
         <Form onSubmit={handleSubmit}>
           <FormGroup>
-            <input 
+            <Input 
               type="text" 
               placeholder="First name"
-              id="first_name"
-              name="first_name"
-              value={formData.first_name}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleInputChange}
             />
-            <input 
+            <Input 
               type="text"
               placeholder="Last name"
-              id="last_name"
-              name="last_name"
-              value={formData.last_name}
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
               onChange={handleInputChange}
             />
           </FormGroup>
@@ -167,7 +163,7 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
           />
 
           <FormGroup>
-            <select 
+            <Select 
               name="uf"
               id="uf"
               value={selectedUf}
@@ -177,9 +173,9 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
               {ufs.map(uf => (
                 <option key={uf} value={uf}>{uf}</option>
               ))}
-            </select>
+            </Select>
 
-            <select
+            <Select
               name="city"
               id="city"
               value={selectedCity}
@@ -189,11 +185,11 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
               {cities.map(city => (
                 <option key={city} value={city}>{city}</option>
               ))}
-            </select>
+            </Select>
           </FormGroup>
 
           <FormGroup>
-            <input 
+            <Input 
               type="tel" 
               placeholder="Phone: (11) 1 1111-1111"
               id="phone"
@@ -202,13 +198,11 @@ const EditContact: React.FC<IProps> = ({ visible, close, data, loadingData }) =>
               pattern="([1-9]{2})[0-9]{8,9}"
               onChange={handleInputChange}
             />
-            <button 
-              className={stateFix ? "button-disabled desactivated" : "button-disabled activated"}
-              type="submit"
-              disabled={stateFix ? true : false}
-            >
-              SAVE
-            </button>
+            {
+              buttonActived 
+              ? <ButtonDisabled disabled>SAVE</ButtonDisabled>
+              : <ButtonEnabled type="submit">SAVE</ButtonEnabled>
+            }
           </FormGroup>
         </Form>
       </Container>

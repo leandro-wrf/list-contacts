@@ -13,7 +13,7 @@ import { IProps } from './types';
 
 const Dropzone: React.FC<IProps> = (props) => {
   const urlLoaded= 
-    'http://192.168.31.105/uploads/noimage' === props.imageUrl ? '' : props.imageUrl
+    'http://localhost:3333/uploads/noimage' === props.imageUrl ? '' : props.imageUrl
   
   const [selectedFileUrl, setSelectedFileUrl] = useState(urlLoaded);
 
@@ -40,7 +40,7 @@ const Dropzone: React.FC<IProps> = (props) => {
         ? <Image src={selectedFileUrl} alt="Contact thumbnail" />
         : (
           <NoContent>
-            <IoMdContact />
+            <IoMdContact size={60} color="#0585a0" />
           </NoContent>
         )
       }

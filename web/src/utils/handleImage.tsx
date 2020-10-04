@@ -1,13 +1,13 @@
 import React from 'react';
 import { IoMdContact } from 'react-icons/io';
 
-import IContact from '../@types/IContact';
+import { Contact } from '../@types';
 
-export default function handleImage(data: IContact) {
-  if (data.image === 'http://192.178.31.105:3333/uploads/noimage') {
+export default function handleImage(data: Contact) {
+  if (data.image === 'http://localhost:3333/uploads/noimage') {
     return (
       <div className="contact-card-avatar">
-        <IoMdContact />
+        <IoMdContact size={82} color="#46ee89" />
       </div>
     )
   }
@@ -16,7 +16,7 @@ export default function handleImage(data: IContact) {
     <img
       className="contact-card-avatar"
       src={data.image} 
-      alt={`${data.first_name} ${data.last_name}`}
+      alt={`${data.firstName} ${data.lastName}`}
     />
   )
 }
