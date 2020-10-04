@@ -2,21 +2,30 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 
-import api from '../../service/api';
+import api from '../../../service/api';
+import getUfs from '../../../service/requests/getUfs';
+import getCities from '../../../service/requests/getCities';
 
-import DropZone from '../DropZone';
+import DropZone from '../../../components/DropZone';
 
-import IProps from '../../@types/IPropsAddContact';
+import { IProps } from './types';
+
 import {
-  IIBGEUFResponse,
-  IIBGECityResponse
-} from '../../@types/IIBGE';
+  IBGEUFResponse,
+  IBGECityResponse
+} from '../../../@types/';
 
-import './styles.css';
+import {
+  Container,
+  Form,
+  FormGroup,
+  InputEmail,
+  Button
+} from './styles';
 
 const AddContact: React.FC<IProps> = props => {
   const [ufs, setUfs] = useState<string[]>([]);
-  const [citys, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
   const [selectedUf, setSelectedUf] = useState('0');
   const [selectedCity, setSelectedCity] = useState('0');
 
@@ -30,12 +39,9 @@ const AddContact: React.FC<IProps> = props => {
   });
 
   useEffect(() => {
-    axios.get<IIBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-      .then(response => {
-        const ufInitials = response.data.map(uf => uf.sigla);
-
-        setUfs(ufInitials);
-      });
+    getUfs().then(response => {
+      setUfs(response);
+    });
   }, []);
 
   useEffect(() => {
@@ -43,12 +49,9 @@ const AddContact: React.FC<IProps> = props => {
       return;
     }
 
-    axios.get<IIBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
-      .then(response => {
-        const cityNames = response.data.map(city => city.nome);
-
-        setCities(cityNames);
-      });
+    getCities().then(response => {
+      setCities(response);
+    });
   }, [selectedUf]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -111,28 +114,28 @@ const AddContact: React.FC<IProps> = props => {
       }}
       ariaHideApp={false}
     >
-      <div className="modal">
+      <Container>
         <DropZone onFileUploaded={setSelectedFile} imageUrl="http://192.178.31.105:3333/uploads/noimage"/>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <div className="modal-form-group">
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
             <input 
               type="text" 
-              placeholder="First name"
+              placeholder="First name..."
               id="firstName"
               name="firstName"
               onChange={handleInputChange}
             />
             <input 
               type="text"
-              placeholder="Last name"
+              placeholder="Last name..."
               id="lastName"
               name="lastName"
               onChange={handleInputChange}
             />
-          </div>
+          </FormGroup>
 
-          <input
+          <InputEmail
             className="modal-form-email"
             type="email"
             placeholder="Email..."
@@ -141,7 +144,7 @@ const AddContact: React.FC<IProps> = props => {
             onChange={handleInputChange}
           />
 
-          <div className="modal-form-group">
+          <FormGroup>
             <select 
               name="uf"
               id="uf"
@@ -161,27 +164,27 @@ const AddContact: React.FC<IProps> = props => {
               onChange={handleSelectCity}
             >
               <option value="0">Select City</option>
-              {citys.map(city => (
+              {cities.map(city => (
                 <option key={city} value={city}>{city}</option>
               ))}
             </select>
-          </div>
+          </FormGroup>
 
-          <div className="modal-form-group">
+          <FormGroup>
             <input 
               type="tel" 
-              placeholder="Phone: (11) 1 1111-1111"
+              placeholder="Phone: (xx) x xxxx-xxxx"
               id="phone"
               name="phone"
               pattern="([1-9]{2})[0-9]{8,9}"
               onChange={handleInputChange}
             />
-            <button type="submit">
+            <Button type="submit">
               REGISTER
-            </button>
-          </div>
-        </form>
-      </div>
+            </Button>
+          </FormGroup>
+        </Form>
+      </Container>
     </Modal>
   );
 }
