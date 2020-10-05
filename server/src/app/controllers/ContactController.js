@@ -4,7 +4,13 @@ const stringToArray = require('../../utils/stringToArray');
 
 class ContactController {
   async index(request, response) {
-    const data = await Contact.findAll();
+    const { page } = request.params;
+    const pageCurrent = Number(page) - 1;
+
+    const data = await Contact.findAll({
+      limit: 9,
+      offset: pageCurrent * 9,
+    });
 
     const newData = serializedData(data);
 

@@ -8,7 +8,7 @@ const routes = Router();
 const upload = multer(multerConfig);
 
 routes
-  .get('/contacts', ContactController.index)
+  .get('/contacts/page/:page', ContactController.index)
   .post('/contact', upload.single('image'), ContactController.create)
   .put('/contact/:id', upload.single('image'), ContactController.update)
   .delete('/contact/:id', ContactController.destroy);
