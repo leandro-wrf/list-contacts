@@ -1,4 +1,5 @@
 const { Contact } = require('../models');
+const Queue = require('../jobs');
 const serializedData = require('../../utils/serializedData');
 const stringToArray = require('../../utils/stringToArray');
 
@@ -18,13 +19,13 @@ class ContactController {
   }
 
   async create(request, response) {
-    const data = request.body;
+    const user = request.body;
 
-    data.image = !request.file ? 'noimage' : request.file.filename;
+    user.image = !request.file ? 'noimage' : request.file.filename;
 
-    const user = await Contact.create(data);
+    const { data } = await Queue.add('RegisterContact', user);
 
-    return response.status(201).json(user);
+    return response.status(201).json(data);
   }
 
   async update(request, response) {
